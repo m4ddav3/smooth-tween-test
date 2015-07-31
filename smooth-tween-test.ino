@@ -13,7 +13,7 @@ SerialCommand sCmd;
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NEO_NUMPIX, NEO_PIN, NEO_GRB + NEO_KHZ800);
 
-struct Colour { // RGB colour structure
+struct Colour {
   byte r;
   byte g;
   byte b;
@@ -89,6 +89,17 @@ uint8_t r, g, b;
 
 void loop() {
   // put your main code here, to run repeatedly:
+
+  if (!tweening && tween_queue.length > 0) {
+    tweening = true;
+
+    Colour *from = &tween_queue.tweens[0].from;
+    from->r = current_colour.r;
+    from->g = current_colour.g;
+    from->b = current_colour.b;
+
+    
+  }
 
   if (tweening) {
   }
