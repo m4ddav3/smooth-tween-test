@@ -94,13 +94,19 @@ void loop() {
     tweening = true;
 
     Colour *from = &tween_queue.tweens[0].from;
+    Colour *to   = &tween_queue.tweens[0].to;
+
+    // Make the destination the distance
+    to->r = current_colour.r - from->r;
+    to->g = current_colour.g - from->g;
+    to->b = current_colour.b - from->b;
+
     from->r = current_colour.r;
     from->g = current_colour.g;
     from->b = current_colour.b;
-
-    
   }
 
   if (tweening) {
+    
   }
 }
