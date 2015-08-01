@@ -35,6 +35,16 @@ struct TweenQueue {
   uint8_t length = 0;
 } tween_queue;
 
+/*
+ * Modified version of the function from the Easing library
+ * Shortcuts if there is no distance to ease toward
+ */
+float easeInOutCubic (float t, float b, float c, float d) {
+  if (c == 0) return b;
+  else if ((t/=d/2) < 1) return c/2*t*t*t + b;
+  return c/2*((t-=2)*t*t + 2) + b;
+}
+
 void cmd_unrecognised(const char *command) {
   Serial.println("Unrecognised command. Ensure you have newline enabled");
 }
@@ -107,6 +117,19 @@ void loop() {
   }
 
   if (tweening) {
+    Colour *from = &tween_queue.tweens[0].from;
+    Colour *to   = &tween_queue.tweens[0].to;
+
+    uint32_t elapsed  = timeElapsed;
+    uint32_t duration = tween_queue.tweens[0].duration;
     
+    uint8_t r = easeInOutCubic(elapsed, from->r, to->r, duration);
+    uint8_t g = easeInOutCubic(elapsed, from->g, to->g, duration);
+    uint8_t b = easeInOutCubic(elapsed, from->b, to->b, duration);
+
+    uint32_t pixel_colour = pixels.Color(r, g, b);
+    for (uint8_t i=0; i<NEO_NUMPIX; i++) {
+      pixels.setPixelColor(i, pixel_colour);
+    }
   }
 }
