@@ -122,7 +122,12 @@ void loop() {
 
     uint32_t elapsed  = timeElapsed;
     uint32_t duration = tween_queue.tweens[0].duration;
-    
+
+    if (elapsed >= duration) {
+      elapsed = duration;
+      teen_queue.tweens[0].complete = true;
+    }
+
     uint8_t r = easeInOutCubic(elapsed, from->r, to->r, duration);
     uint8_t g = easeInOutCubic(elapsed, from->g, to->g, duration);
     uint8_t b = easeInOutCubic(elapsed, from->b, to->b, duration);
@@ -130,6 +135,10 @@ void loop() {
     uint32_t pixel_colour = pixels.Color(r, g, b);
     for (uint8_t i=0; i<NEO_NUMPIX; i++) {
       pixels.setPixelColor(i, pixel_colour);
+    }
+
+    if (teen_queue.tweens[0].complete) {
+      // manage the queue
     }
   }
 }
