@@ -19,6 +19,10 @@ struct Colour {
   byte b;
 };
 
+/*
+ * sort this out to be a linked list or ring buffer
+ */
+
 struct RgbTween {
   Colour   from;
   Colour   to;
@@ -98,8 +102,6 @@ boolean tweening = false;
 uint8_t r, g, b;
 
 void loop() {
-  // put your main code here, to run repeatedly:
-
   if (!tweening && tween_queue.length > 0) {
     tweening = true;
 
@@ -139,6 +141,7 @@ void loop() {
 
     if (teen_queue.tweens[0].complete) {
       // manage the queue
+      tweening = false;
     }
   }
 }
