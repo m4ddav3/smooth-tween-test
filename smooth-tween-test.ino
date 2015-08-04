@@ -31,6 +31,11 @@ struct RgbTween {
   boolean  complete = true;
 };
 
+struct Node {
+  RgbTween tween;
+  Node next;
+};
+
 Colour current_colour;
 
 #define MAX_TWEEN_QUEUE_SIZE 2
