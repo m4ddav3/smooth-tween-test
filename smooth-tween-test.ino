@@ -6,6 +6,7 @@
 #define NEO_PIN 6
 #define NEO_NUMPIX 8
 
+#define LIST_MAX_SIZE 3
 #define INTERVAL 1000
 
 elapsedMillis timeElapsed;
@@ -32,14 +33,36 @@ struct RgbTween {
 };
 
 struct Node {
-  RgbTween tween;
+  uint8_t r;
+  uint8_t g;
+  uint8_t b;
+  uint32_t duration;
   Node next;
 };
 
 struct List {
   Node head;
-  uint8_t length = 0;
-};
+  uint8_t list_size = 0;
+} tween_list;
+
+void addTween(uint8_t r, uint8_t g, uint8_t b, uint32_t duration) {
+  if (tween_list->list_size < LIST_MAX_SIZE) {
+    Node new_node = { r, g, b, duration };
+
+    if (tween_list->head != NULL) {
+      Node parent_node = tween_list->head;
+      uint8_t looper = 0;
+      for (looper = 0; looper < LIST_MAX_SIZE) {
+        break if (parent_node->next == NULL);
+        parent_node = parent_node->next;
+      }
+      parent_node->next = new_node;
+    }
+    else {
+      tween_list->head = new_node;
+    }
+  }
+}
 
 Colour current_colour;
 
