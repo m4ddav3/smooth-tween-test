@@ -36,6 +36,11 @@ struct Node {
   Node next;
 };
 
+struct List {
+  Node head;
+  uint8_t length = 0;
+};
+
 Colour current_colour;
 
 #define MAX_TWEEN_QUEUE_SIZE 2
