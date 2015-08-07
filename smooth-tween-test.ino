@@ -25,8 +25,8 @@ struct Colour {
  */
 
 struct RgbTween {
-  Colour   from;
-  Colour   to;
+  Colour   *from;
+  Colour   *to;
   uint32_t duration = 0;
   uint32_t pos = 0;
   boolean  complete = true;
@@ -37,29 +37,29 @@ struct Node {
   uint8_t g;
   uint8_t b;
   uint32_t duration;
-  Node next;
+  Node *next;
 };
 
 struct List {
-  Node head;
+  Node *head;
   uint8_t list_size = 0;
 } tween_list;
 
 void addTween(uint8_t r, uint8_t g, uint8_t b, uint32_t duration) {
-  if (tween_list->list_size < LIST_MAX_SIZE) {
+  if (tween_list.list_size < LIST_MAX_SIZE) {
     Node new_node = { r, g, b, duration };
 
-    if (tween_list->head != NULL) {
-      Node parent_node = tween_list->head;
+    if (!tween_list.head) {
+      Node *parent_node = tween_list.head;
       uint8_t looper = 0;
-      for (looper = 0; looper < LIST_MAX_SIZE) {
-        break if (parent_node->next == NULL);
+      for (looper = 0; looper < LIST_MAX_SIZE; looper++) {
+        if (parent_node->next == NULL) break;
         parent_node = parent_node->next;
       }
-      parent_node->next = new_node;
+      parent_node->next = &new_node;
     }
     else {
-      tween_list->head = new_node;
+      tween_list.head = &new_node;
     }
   }
 }
@@ -138,8 +138,8 @@ void loop() {
   if (!tweening && tween_queue.length > 0) {
     tweening = true;
 
-    Colour *from = &tween_queue.tweens[0].from;
-    Colour *to   = &tween_queue.tweens[0].to;
+    Colour *from = tween_queue.tweens[0].from;
+    Colour *to   = tween_queue.tweens[0].to;
 
     // Make the destination the distance
     to->r = current_colour.r - from->r;
@@ -152,15 +152,15 @@ void loop() {
   }
 
   if (tweening) {
-    Colour *from = &tween_queue.tweens[0].from;
-    Colour *to   = &tween_queue.tweens[0].to;
+    Colour *from = tween_queue.tweens[0].from;
+    Colour *to   = tween_queue.tweens[0].to;
 
     uint32_t elapsed  = timeElapsed;
     uint32_t duration = tween_queue.tweens[0].duration;
 
     if (elapsed >= duration) {
       elapsed = duration;
-      teen_queue.tweens[0].complete = true;
+      tween_queue.tweens[0].complete = true;
     }
 
     uint8_t r = easeInOutCubic(elapsed, from->r, to->r, duration);
@@ -172,7 +172,7 @@ void loop() {
       pixels.setPixelColor(i, pixel_colour);
     }
 
-    if (teen_queue.tweens[0].complete) {
+    if (tween_queue.tweens[0].complete) {
       // manage the queue
       tweening = false;
     }
