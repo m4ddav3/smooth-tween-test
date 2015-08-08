@@ -66,12 +66,6 @@ void addTween(uint8_t r, uint8_t g, uint8_t b, uint32_t duration) {
 
 Colour current_colour;
 
-#define MAX_TWEEN_QUEUE_SIZE 2
-struct TweenQueue {
-  RgbTween tweens[MAX_TWEEN_QUEUE_SIZE];
-  uint8_t length = 0;
-} tween_queue;
-
 /*
  * Modified version of the function from the Easing library
  * Shortcuts if there is no distance to ease toward
